@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#102c2b">
+  <meta name="description" content="Portfolio-safe animated Telegram Mini App demo for Yoga Wrapped.">
+  <title>Yoga Wrapped Mini App Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --teal-950: #102c2b;
+      --teal-900: #173735;
+      --teal-800: #204845;
+      --teal-650: #3b6863;
+      --cream: #f5f0e7;
+      --muted: rgba(245, 240, 231, .54);
+      --soft: rgba(245, 240, 231, .16);
+      --gold: #d1ad68;
+      --gold-2: #e6c77e;
+      --line: rgba(245, 240, 231, .14);
+      --slide-pad-x: clamp(22px, 6vw, 70px);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 100dvh;
+      overflow: hidden;
+      overscroll-behavior: none;
+      background: var(--teal-950);
+      color: var(--cream);
+      font-family: Avenir Next, Montserrat, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      user-select: none;
+    }
+
+    body {
+      position: fixed;
+      inset: 0;
+      touch-action: pan-y;
+    }
+
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 24% 82%, rgba(209, 173, 104, .20), transparent 28%),
+        radial-gradient(circle at 72% 24%, rgba(91, 144, 137, .34), transparent 34%),
+        linear-gradient(135deg, #112d2c 0%, #173a38 48%, #0e2625 100%);
+    }
+
+    .ambient::before,
+    .ambient::after {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        conic-gradient(from 120deg at 45% 50%, transparent 0 24%, rgba(245,240,231,.05) 28%, transparent 34% 100%);
+      filter: blur(18px);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    .ambient::after {
+      background:
+        radial-gradient(ellipse at 55% 50%, rgba(245,240,231,.06), transparent 35%),
+        linear-gradient(90deg, transparent 0 46%, rgba(68,120,115,.28) 46% 61%, transparent 61%);
+      animation-duration: 24s;
+      mix-blend-mode: screen;
+      opacity: .7;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(-2%, 1%, 0) rotate(-2deg) scale(1); }
+      to { transform: translate3d(3%, -2%, 0) rotate(3deg) scale(1.04); }
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      gap: 4px;
+      padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 10px;
+      background: linear-gradient(to bottom, rgba(0,0,0,.30), rgba(0,0,0,.08) 58%, transparent);
+    }
+
+    .p-seg {
+      flex: 1;
+      height: 3px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(245,240,231,.18);
+      box-shadow: 0 0 0 1px rgba(245,240,231,.045) inset;
+    }
+
+    .p-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: rgba(245,240,231,.94);
+    }
+
+    .p-seg.done .p-fill { background: rgba(245,240,231,.42); }
+    .p-seg.current .p-fill { background: var(--cream); box-shadow: 0 0 8px rgba(245,240,231,.28); }
+
+    .slides {
+      position: relative;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: calc(env(safe-area-inset-top, 0px) + 56px) var(--slide-pad-x) calc(env(safe-area-inset-bottom, 0px) + 56px);
+      opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .slide.t-enter { animation: tEnter .5s cubic-bezier(.22, 1, .36, 1) both; }
+    .slide.t-exit { animation: tExit .34s ease both; }
+    @keyframes tEnter { from { opacity: 0; transform: translateY(28px) scale(.985); } to { opacity: 1; transform: none; } }
+    @keyframes tExit { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-18px) scale(.985); } }
+
+    .tap-zone {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+      width: 42%;
+      background: transparent;
+      cursor: pointer;
+    }
+    .tap-zone.left { left: 0; }
+    .tap-zone.right { right: 0; }
+
+    .brand {
+      position: absolute;
+      left: clamp(24px, 5vw, 44px);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+      z-index: 3;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      line-height: 1.35;
+    }
+
+    .brand small {
+      display: block;
+      color: rgba(245,240,231,.42);
+      font-size: clamp(8px, 1vw, 10px);
+      font-weight: 400;
+    }
+
+    .brand strong {
+      display: block;
+      color: var(--cream);
+      font-size: clamp(10px, 1.3vw, 13px);
+      font-weight: 800;
+    }
+
+    .arrow {
+      position: absolute;
+      right: clamp(24px, 5vw, 44px);
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+      z-index: 12;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(245,240,231,.45);
+      color: var(--cream);
+      background: rgba(245,240,231,.025);
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+    }
+
+    .arrow svg { width: 18px; height: 18px; }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: clamp(10px, 1.4vw, 13px);
+      font-weight: 800;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .rule {
+      width: 64px;
+      height: 2px;
+      background: var(--gold);
+      margin-bottom: clamp(22px, 4vh, 34px);
+    }
+
+    .reveal { animation: fadeUp .62s both; }
+    .r2 { animation-delay: .12s; }
+    .r3 { animation-delay: .24s; }
+    .r4 { animation-delay: .36s; }
+    .r5 { animation-delay: .48s; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+    .cover-inner,
+    .hours-inner,
+    .rhythm-inner,
+    .teachers-inner,
+    .classes-inner,
+    .final-inner {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 760px);
+    }
+
+    .cover-title {
+      font-size: clamp(58px, 13vw, 132px);
+      line-height: .86;
+      letter-spacing: -.04em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .cover-title em {
+      display: block;
+      color: var(--gold);
+      font-weight: 250;
+      font-style: italic;
+    }
+
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      margin-bottom: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--cream);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+
+    .cover-badge span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .hours-inner {
+      text-align: center;
+      max-width: 620px;
+    }
+
+    .hours-num {
+      font-size: clamp(112px, 26vw, 230px);
+      line-height: .82;
+      letter-spacing: -.06em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .hours-unit {
+      color: rgba(209,173,104,.82);
+      font-size: clamp(23px, 5.4vw, 46px);
+      font-weight: 250;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .caption {
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: clamp(13px, 1.7vw, 16px);
+      line-height: 1.8;
+      letter-spacing: .05em;
+    }
+
+    .rhythm-inner {
+      max-width: 680px;
+    }
+
+    .bars {
+      display: flex;
+      align-items: end;
+      gap: clamp(10px, 2vw, 18px);
+      width: 100%;
+      margin: clamp(26px, 5vh, 42px) 0;
+    }
+
+    .bar-col {
+      flex: 1;
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: clamp(150px, 28vh, 230px);
+      display: flex;
+      align-items: end;
+    }
+
+    .bar {
+      width: 100%;
+      min-height: 4px;
+      height: 0%;
+      border-radius: 4px 4px 0 0;
+      background: rgba(91,144,137,.78);
+      transition: height .9s cubic-bezier(.34, 1.4, .64, 1);
+    }
+
+    .bar.peak { background: var(--gold); }
+    .bar-label {
+      color: var(--muted);
+      font-size: clamp(9px, 1.2vw, 12px);
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .insight {
+      border-left: 3px solid var(--gold);
+      background: rgba(209,173,104,.07);
+      padding: 18px 22px;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: clamp(13px, 1.6vw, 16px);
+    }
+
+    .insight strong { color: var(--cream); }
+
+    .teachers-inner {
+      max-width: 760px;
+    }
+
+    .teacher-layout {
+      display: grid;
+      grid-template-columns: .74fr 1.26fr;
+      gap: clamp(24px, 4vw, 42px);
+      align-items: start;
+    }
+
+    .top-teacher {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .avatar {
+      width: clamp(92px, 12vw, 120px);
+      height: clamp(92px, 12vw, 120px);
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+      border-radius: 50%;
+      border: 2px solid rgba(209,173,104,.45);
+      color: var(--teal-950);
+      background:
+        radial-gradient(circle at 34% 24%, rgba(245,240,231,.95), transparent 19%),
+        linear-gradient(135deg, #e7decf, #98aca4 55%, #d1ad68);
+      font-size: clamp(28px, 4vw, 38px);
+      font-weight: 900;
+    }
+
+    .crown {
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .30em;
+      text-transform: uppercase;
+    }
+
+    .crown::before {
+      content: "";
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .teacher-name {
+      color: var(--cream);
+      font-size: clamp(31px, 5.5vw, 58px);
+      line-height: .98;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .teacher-name em {
+      display: block;
+      font-weight: 250;
+      font-style: italic;
+    }
+
+    .teacher-stats {
+      display: grid;
+      grid-template-columns: auto minmax(8ch, auto) 1fr;
+      align-items: center;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .teacher-big {
+      color: var(--gold);
+      font-size: clamp(58px, 9vw, 96px);
+      line-height: .88;
+      font-weight: 900;
+      letter-spacing: -.05em;
+    }
+
+    .teacher-sub {
+      color: var(--muted);
+      font-size: clamp(10px, 1.2vw, 13px);
+      font-weight: 800;
+      letter-spacing: .19em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .pill {
+      justify-self: start;
+      white-space: nowrap;
+      border-radius: 999px;
+      padding: 10px 17px;
+      background: var(--gold);
+      color: var(--teal-950);
+      font-size: clamp(10px, 1.1vw, 13px);
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .teacher-list {
+      border-left: 1px solid var(--line);
+      padding-left: clamp(20px, 3vw, 34px);
+    }
+
+    .teacher-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .teacher-row:last-child { border-bottom: 0; }
+    .rank {
+      color: var(--muted);
+      min-width: 26px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .mini-avatar {
+      width: 52px;
+      height: 52px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(245,240,231,.22);
+      background: linear-gradient(135deg, rgba(245,240,231,.92), rgba(91,144,137,.8));
+      color: var(--teal-950);
+      font-weight: 900;
+    }
+
+    .teacher-row strong {
+      display: block;
+      font-size: clamp(18px, 2.2vw, 26px);
+      line-height: 1.12;
+    }
+
+    .teacher-row span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: clamp(12px, 1.4vw, 15px);
+      letter-spacing: .04em;
+    }
+
+    .classes-inner {
+      max-width: 560px;
+      text-align: center;
+    }
+
+    .donut-wrap {
+      position: relative;
+      width: min(72vw, 340px);
+      margin: 22px auto 28px;
+      aspect-ratio: 1;
+    }
+
+    .donut-wrap svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 28px 34px rgba(0,0,0,.18));
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 32%;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(16,44,43,.68);
+      color: var(--cream);
+      font-size: clamp(38px, 8vw, 62px);
+      font-weight: 900;
+    }
+
+    .legend {
+      display: grid;
+      gap: 14px;
+      text-align: left;
+    }
+
+    .legend-row {
+      display: grid;
+      grid-template-columns: 14px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    .legend-name {
+      color: var(--cream);
+      font-weight: 800;
+      font-size: clamp(13px, 1.6vw, 16px);
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .legend-val {
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .final-inner {
+      max-width: 640px;
+      text-align: center;
+    }
+
+    .final-title {
+      font-size: clamp(50px, 12vw, 112px);
+      line-height: .88;
+      letter-spacing: -.04em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .final-title em {
+      display: block;
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 250;
+    }
+
+    .final-card {
+      display: grid;
+      gap: 1px;
+      margin: 34px auto 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--line);
+      text-align: left;
+    }
+
+    .final-row {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      padding: 18px 22px;
+      background: rgba(16,44,43,.58);
+    }
+
+    .final-row b {
+      color: var(--gold);
+      min-width: 2.5ch;
+      font-size: clamp(32px, 6vw, 48px);
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .final-row span {
+      color: var(--cream);
+      font-size: clamp(15px, 2vw, 19px);
+      line-height: 1.3;
+    }
+
+    .hint {
+      position: fixed;
+      left: 50%;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+      z-index: 18;
+      transform: translateX(-50%);
+      color: rgba(245,240,231,.46);
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    @media (max-width: 680px) {
+      .teacher-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+      .top-teacher {
+        display: grid;
+        grid-template-columns: clamp(86px, 25vw, 112px) minmax(0, 1fr);
+        grid-template-areas:
+          "avatar crown"
+          "avatar name"
+          "stats stats";
+        gap: 10px 16px;
+        align-items: center;
+      }
+      .top-teacher .avatar {
+        grid-area: avatar;
+        margin: 0;
+      }
+      .top-teacher .crown {
+        grid-area: crown;
+        margin: 0;
+        font-size: 9px;
+        letter-spacing: .23em;
+      }
+      .teacher-name {
+        grid-area: name;
+        min-width: 0;
+        font-size: clamp(28px, 8vw, 42px);
+      }
+      .teacher-stats {
+        grid-area: stats;
+        grid-template-columns: auto minmax(7ch, auto) 1fr;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      .teacher-big { font-size: clamp(58px, 15vw, 82px); }
+      .teacher-sub { font-size: 10px; }
+      .pill {
+        padding: 9px 12px;
+        font-size: 10px;
+        letter-spacing: .10em;
+      }
+      .teacher-list {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        padding-left: 0;
+      }
+      .teacher-row {
+        padding: 16px 0;
+      }
+      .mini-avatar {
+        width: 44px;
+        height: 44px;
+      }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <nav class="progress" id="progress" aria-label="Slide progress"></nav>
+  <button class="tap-zone left" type="button" aria-label="Previous slide"></button>
+  <button class="tap-zone right" type="button" aria-label="Next slide"></button>
+
+  <main class="slides" id="slides">
+    <section class="slide active" id="cover">
+      <div class="cover-inner">
+        <div class="cover-badge reveal"><span></span> Urban Yoga Studio · 2026</div>
+        <h1 class="cover-title reveal r2">Your<br><em>year</em><br>in flow</h1>
+      </div>
+      <div class="brand"><small>Yoga Wrapped</small><strong>Portfolio Demo</strong></div>
+      <button class="arrow" type="button" aria-label="Next slide" data-next>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <section class="slide" id="hours">
+      <div class="hours-inner">
+        <div class="eyebrow reveal">Time on the mat</div>
+        <div class="hours-num reveal r2"><span class="countup" data-to="101">0</span></div>
+        <div class="hours-unit reveal r3">hours practiced</div>
+        <p class="caption reveal r4">A synthetic year: 7 months, 84 classes, and 6,060 minutes of deliberate movement.</p>
+      </div>
+      <div class="brand"><small>Yoga Wrapped</small><strong>Portfolio Demo</strong></div>
+      <button class="arrow" type="button" aria-label="Next slide" data-next>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <section class="slide" id="rhythm">
+      <div class="rhythm-inner">
+        <div class="eyebrow reveal">Monthly rhythm</div>
+        <div class="rule reveal"></div>
+        <h2 class="teacher-name reveal r2">Practice<br><em>by month</em></h2>
+        <div class="bars reveal r3" id="bars"></div>
+        <p class="insight reveal r4"><strong>June was the strongest month.</strong> The chart is generated from synthetic attendance aggregates.</p>
+      </div>
+      <div class="brand"><small>Yoga Wrapped</small><strong>Portfolio Demo</strong></div>
+      <button class="arrow" type="button" aria-label="Next slide" data-next>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <section class="slide" id="teachers">
+      <div class="teachers-inner">
+        <div class="eyebrow reveal">Teachers</div>
+        <div class="rule reveal"></div>
+        <div class="teacher-layout">
+          <div class="top-teacher">
+            <div class="avatar">A</div>
+            <div class="crown">#1 teacher</div>
+            <div class="teacher-name">Instructor<em>A</em></div>
+            <div class="teacher-stats">
+              <div class="teacher-big">24</div>
+              <div class="teacher-sub">classes<br>together</div>
+              <div class="pill">29% of practice</div>
+            </div>
+          </div>
+          <div class="teacher-list">
+            <div class="teacher-row">
+              <div class="rank">02</div><div class="mini-avatar">B</div>
+              <div><strong>Instructor B</strong><span>18 classes · 21%</span></div>
+            </div>
+            <div class="teacher-row">
+              <div class="rank">03</div><div class="mini-avatar">C</div>
+              <div><strong>Instructor C</strong><span>15 classes · 18%</span></div>
+            </div>
+            <div class="teacher-row">
+              <div class="rank">04</div><div class="mini-avatar">D</div>
+              <div><strong>Instructor D</strong><span>9 classes · 11%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="brand"><small>Yoga Wrapped</small><strong>Portfolio Demo</strong></div>
+      <button class="arrow" type="button" aria-label="Next slide" data-next>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <section class="slide" id="classes">
+      <div class="classes-inner">
+        <div class="eyebrow reveal">Class mix</div>
+        <div class="donut-wrap reveal r2">
+          <svg viewBox="0 0 300 300" aria-hidden="true">
+            <circle cx="150" cy="150" r="118" fill="none" stroke="rgba(245,240,231,.06)" stroke-width="42"/>
+            <g id="donut"></g>
+          </svg>
+          <div class="donut-center"><span class="countup" data-to="84">0</span></div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="brand"><small>Yoga Wrapped</small><strong>Portfolio Demo</strong></div>
+      <button class="arrow" type="button" aria-label="Next slide" data-next>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </section>
+
+    <section class="slide" id="final">
+      <div class="final-inner">
+        <div class="eyebrow reveal">Final recap</div>
+        <h2 class="final-title reveal r2">Keep<br><em>showing up</em></h2>
+        <div class="final-card reveal r3">
+          <div class="final-row"><b>9</b><span>week streak during the year</span></div>
+          <div class="final-row"><b>84</b><span>synthetic visits visualized</span></div>
+          <div class="final-row"><b>2.7</b><span>classes per active week</span></div>
+        </div>
+      </div>
+      <div class="brand"><small>Yoga Wrapped</small><strong>Portfolio Demo</strong></div>
+      <button class="arrow" type="button" aria-label="Restart" data-restart>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 1 0 2.34-5.66M4 4v6h6"/></svg>
+      </button>
+    </section>
+  </main>
+
+  <div class="hint">Tap sides · swipe · hold to pause</div>
+
+  <script>
+    const slideIds = ["cover", "hours", "rhythm", "teachers", "classes", "final"];
+    const durations = { cover: 5600, hours: 8500, rhythm: 9000, teachers: 10000, classes: 9500, final: 11000 };
+    const slides = slideIds.map(id => document.getElementById(id));
+    const progress = document.getElementById("progress");
+    let current = 0;
+    let timer = null;
+    let timerStartedAt = 0;
+    let timerRemaining = 0;
+    let paused = false;
+    let progressToken = 0;
+    let touchX = 0;
+
+    progress.innerHTML = slideIds.map((_, index) => `<div class="p-seg"><div class="p-fill" id="p${index}"></div></div>`).join("");
+    const fills = slideIds.map((_, index) => document.getElementById(`p${index}`));
+
+    const monthData = [
+      ["Jan", 8], ["Feb", 10], ["Mar", 11], ["Apr", 9], ["May", 13], ["Jun", 18], ["Jul", 15],
+    ];
+    const maxMonth = Math.max(...monthData.map(item => item[1]));
+    document.getElementById("bars").innerHTML = monthData.map(([label, value]) => `
+      <div class="bar-col">
+        <div class="bar-track"><div class="bar ${value === maxMonth ? "peak" : ""}" data-height="${Math.round(value / maxMonth * 100)}"></div></div>
+        <div class="bar-label">${label}</div>
+      </div>
+    `).join("");
+
+    const classData = [
+      { name: "Flow Yoga", count: 36, pct: 43, color: "#d1ad68" },
+      { name: "Open Level", count: 21, pct: 25, color: "#7fb2ad" },
+      { name: "Meditation", count: 15, pct: 18, color: "#9ab7ad" },
+      { name: "Mobility", count: 12, pct: 14, color: "rgba(245,240,231,.35)" },
+    ];
+
+    function setProgressState(activeIndex) {
+      fills.forEach((fill, index) => {
+        const seg = fill.parentElement;
+        seg.classList.toggle("done", index < activeIndex);
+        seg.classList.toggle("current", index === activeIndex);
+        seg.classList.toggle("upcoming", index > activeIndex);
+      });
+    }
+
+    function resetProgressFor(activeIndex) {
+      progressToken += 1;
+      fills.forEach((fill, index) => {
+        fill.style.transition = "none";
+        fill.style.width = index < activeIndex ? "100%" : "0%";
+      });
+      setProgressState(activeIndex);
+    }
+
+    function startProgressFor(activeIndex, duration) {
+      const token = progressToken;
+      const fill = fills[activeIndex];
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (token !== progressToken || activeIndex !== current) return;
+        fill.style.transition = `width ${duration}ms linear`;
+        fill.style.width = "100%";
+      }));
+    }
+
+    function scheduleAdvance(duration) {
+      clearTimeout(timer);
+      timerRemaining = duration;
+      timerStartedAt = performance.now();
+      timer = setTimeout(() => {
+        if (current < slides.length - 1) showSlide(current + 1);
+      }, duration);
+    }
+
+    function countUp(el) {
+      const target = Number(el.dataset.to || "0");
+      const start = performance.now();
+      const duration = 1900;
+      el.textContent = "0";
+      function frame(now) {
+        const p = Math.min(1, (now - start) / duration);
+        const eased = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        el.textContent = String(Math.round(target * eased));
+        if (p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function animateBars() {
+      document.querySelectorAll(".bar").forEach((bar, index) => {
+        bar.style.height = "0%";
+        setTimeout(() => { bar.style.height = `${bar.dataset.height}%`; }, 180 + index * 75);
+      });
+    }
+
+    function animateTeachers() {
+      const rows = [...document.querySelectorAll(".teacher-row")].reverse();
+      const top = document.querySelector(".top-teacher");
+      [...rows, top].forEach((el, index) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(18px)";
+        el.style.transition = "opacity .58s ease, transform .58s cubic-bezier(.22,1,.36,1)";
+        setTimeout(() => {
+          el.style.opacity = "1";
+          el.style.transform = "none";
+        }, 260 + index * 480);
+      });
+    }
+
+    function animateDonut() {
+      const group = document.getElementById("donut");
+      const legend = document.getElementById("legend");
+      const r = 118;
+      const c = 2 * Math.PI * r;
+      let offset = 0;
+      group.innerHTML = "";
+      legend.innerHTML = classData.map((item, index) => `
+        <div class="legend-row" data-leg="${index}">
+          <span class="dot" style="background:${item.color}"></span>
+          <span class="legend-name">${item.name}</span>
+          <span class="legend-val">${item.count} · ${item.pct}%</span>
+        </div>
+      `).join("");
+
+      classData.forEach((item, index) => {
+        const arc = item.pct / 100 * c;
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", "150");
+        circle.setAttribute("cy", "150");
+        circle.setAttribute("r", String(r));
+        circle.setAttribute("fill", "none");
+        circle.setAttribute("stroke", item.color);
+        circle.setAttribute("stroke-width", "42");
+        circle.setAttribute("stroke-dasharray", `0 ${c}`);
+        circle.setAttribute("stroke-dashoffset", String(-offset));
+        circle.setAttribute("transform", "rotate(-90 150 150)");
+        group.appendChild(circle);
+        setTimeout(() => {
+          circle.style.transition = "stroke-dasharray 1s cubic-bezier(.33,1,.68,1)";
+          circle.setAttribute("stroke-dasharray", `${Math.max(0, arc - 2)} ${c - arc + 2}`);
+          const row = legend.querySelector(`[data-leg="${index}"]`);
+          if (row) {
+            row.style.transition = "opacity .48s ease, transform .48s ease";
+            row.style.opacity = "1";
+            row.style.transform = "none";
+          }
+        }, 250 + index * 650);
+        offset += arc;
+      });
+    }
+
+    function rerunSlideAnimations(slide) {
+      slide.querySelectorAll(".reveal").forEach(el => {
+        el.style.animation = "none";
+        void el.offsetHeight;
+        el.style.animation = "";
+      });
+      setTimeout(() => slide.querySelectorAll(".countup").forEach(countUp), 240);
+      if (slide.id === "rhythm") animateBars();
+      if (slide.id === "teachers") animateTeachers();
+      if (slide.id === "classes") animateDonut();
+    }
+
+    function showSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      const old = slides[current];
+      old.classList.remove("active");
+      old.classList.add("t-exit");
+      setTimeout(() => old.classList.remove("t-exit"), 360);
+
+      current = index;
+      paused = false;
+      const next = slides[current];
+      next.classList.add("active", "t-enter");
+      setTimeout(() => next.classList.remove("t-enter"), 520);
+
+      const duration = durations[next.id] || 8500;
+      resetProgressFor(current);
+      startProgressFor(current, duration);
+      scheduleAdvance(duration);
+      rerunSlideAnimations(next);
+    }
+
+    function go(delta) {
+      showSlide(current + delta);
+    }
+
+    function pausePlayback() {
+      if (paused) return;
+      paused = true;
+      timerRemaining = Math.max(0, timerRemaining - (performance.now() - timerStartedAt));
+      clearTimeout(timer);
+      const fill = fills[current];
+      const parentWidth = fill.parentElement.getBoundingClientRect().width;
+      const currentWidth = fill.getBoundingClientRect().width;
+      fill.style.transition = "none";
+      fill.style.width = `${parentWidth ? currentWidth / parentWidth * 100 : 0}%`;
+    }
+
+    function resumePlayback() {
+      if (!paused) return;
+      paused = false;
+      const remaining = Math.max(150, timerRemaining);
+      startProgressFor(current, remaining);
+      scheduleAdvance(remaining);
+    }
+
+    document.querySelector(".tap-zone.left").addEventListener("click", () => go(-1));
+    document.querySelector(".tap-zone.right").addEventListener("click", () => go(1));
+    document.querySelectorAll("[data-next]").forEach(button => button.addEventListener("click", event => {
+      event.stopPropagation();
+      go(1);
+    }));
+    document.querySelector("[data-restart]").addEventListener("click", event => {
+      event.stopPropagation();
+      showSlide(0);
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowRight" || event.key === " ") {
+        event.preventDefault();
+        go(1);
+      }
+      if (event.key === "ArrowLeft") go(-1);
+    });
+
+    document.addEventListener("touchstart", event => {
+      touchX = event.touches[0].clientX;
+      pausePlayback();
+    }, { passive: true });
+
+    document.addEventListener("touchend", event => {
+      const dx = event.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 45) {
+        go(dx < 0 ? 1 : -1);
+        return;
+      }
+      resumePlayback();
+    }, { passive: true });
+
+    document.addEventListener("touchcancel", resumePlayback, { passive: true });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
+
