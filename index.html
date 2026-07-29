@@ -44,64 +44,8 @@
     .page-bg {
       min-height: 100dvh;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 430px) minmax(0, 1fr);
-      align-items: center;
-      gap: clamp(18px, 4vw, 56px);
+      place-items: center;
       padding: clamp(18px, 3vw, 34px);
-    }
-
-    .demo-copy {
-      justify-self: end;
-      max-width: 420px;
-      color: rgba(245,240,231,.72);
-    }
-
-    .demo-copy__label {
-      color: var(--gold);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-    }
-
-    .demo-copy h1 {
-      margin-top: 18px;
-      color: var(--cream);
-      font-size: clamp(38px, 5vw, 70px);
-      line-height: .92;
-      letter-spacing: -.04em;
-      text-transform: uppercase;
-    }
-
-    .demo-copy p {
-      margin-top: 20px;
-      font-size: 17px;
-      line-height: 1.7;
-    }
-
-    .demo-copy a {
-      color: var(--gold-2);
-      text-decoration-color: rgba(230,199,126,.35);
-      text-underline-offset: 5px;
-    }
-
-    .demo-notes {
-      justify-self: start;
-      max-width: 320px;
-      display: grid;
-      gap: 12px;
-      color: rgba(245,240,231,.62);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .demo-notes span {
-      display: block;
-      padding: 14px 16px;
-      border: 1px solid rgba(245,240,231,.10);
-      border-radius: 16px;
-      background: rgba(245,240,231,.045);
-      backdrop-filter: blur(10px);
     }
 
     .app-frame {
@@ -202,11 +146,16 @@
     @keyframes tExit { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-18px) scale(.985); } }
 
     .tap-zone {
+      appearance: none;
+      -webkit-appearance: none;
       position: absolute;
       top: 0;
       bottom: 0;
       z-index: 10;
       width: 42%;
+      padding: 0;
+      border: 0;
+      outline: 0;
       background: transparent;
       cursor: pointer;
     }
@@ -696,17 +645,12 @@
       letter-spacing: .16em;
       text-transform: uppercase;
       pointer-events: none;
+      display: none;
     }
 
     @media (max-width: 1100px) {
       .page-bg {
-        grid-template-columns: minmax(320px, 430px);
-        justify-content: center;
-      }
-
-      .demo-copy,
-      .demo-notes {
-        display: none;
+        padding: clamp(12px, 3vw, 24px);
       }
     }
 
@@ -795,13 +739,6 @@
 </head>
 <body>
   <div class="page-bg">
-  <aside class="demo-copy" aria-label="Описание демо">
-    <div class="demo-copy__label">Portfolio demo</div>
-    <h1>Yoga Wrapped для Telegram</h1>
-    <p>Обезличенная версия интерактивных итогов года: слайды, свайпы, пауза удержанием и мобильная логика Telegram Mini App.</p>
-    <p><a href="https://github.com/lllllllleo495/joga_wrapped">Открыть репозиторий на GitHub</a></p>
-  </aside>
-
   <div class="app-frame">
   <nav class="progress" id="progress" aria-label="Прогресс слайдов"></nav>
   <button class="tap-zone left" type="button" aria-label="Предыдущий слайд"></button>
@@ -920,11 +857,6 @@
 
   <div class="hint">Тап по краям · свайп · удержание для паузы</div>
   </div>
-  <aside class="demo-notes" aria-label="Особенности демо">
-    <span>Все ФИО, название студии, фотографии и реальные посещения удалены.</span>
-    <span>На телефоне демо открывается на весь экран, на desktop остается в мобильном фрейме.</span>
-    <span>Это статичный GitHub Pages сайт, он не связан с боевым ботом и VPS.</span>
-  </aside>
   </div>
 
   <script>

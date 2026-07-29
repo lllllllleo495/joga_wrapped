@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="430" height="932" viewBox="0 0 430 932" role="img" aria-labelledby="title desc">
+  <title id="title">Обезличенный preview Yoga Wrapped</title>
+  <desc id="desc">Анимированный мокап мобильных слайдов Telegram Mini App без реальных пользовательских данных.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#112d2c"/>
+      <stop offset=".54" stop-color="#1f4a45"/>
+      <stop offset="1" stop-color="#0b2422"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="24%" cy="78%" r="45%">
+      <stop offset="0" stop-color="#d1ad68" stop-opacity=".26"/>
+      <stop offset=".62" stop-color="#d1ad68" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#d1ad68" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="76%" cy="22%" r="42%">
+      <stop offset="0" stop-color="#74aca5" stop-opacity=".30"/>
+      <stop offset=".7" stop-color="#74aca5" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#74aca5" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="24" stdDeviation="22" flood-color="#000" flood-opacity=".18"/>
+    </filter>
+    <style>
+      .cream { fill: #f5f0e7; }
+      .gold { fill: #d1ad68; }
+      .muted { fill: rgba(245,240,231,.56); }
+      .line { stroke: rgba(245,240,231,.20); }
+      .slide { opacity: 0; animation: show 18s infinite; }
+      .s1 { animation-delay: 0s; }
+      .s2 { animation-delay: 3s; }
+      .s3 { animation-delay: 6s; }
+      .s4 { animation-delay: 9s; }
+      .s5 { animation-delay: 12s; }
+      .s6 { animation-delay: 15s; }
+      .progress .fill { transform-origin: left center; transform: scaleX(.14); animation: progress 18s linear infinite; }
+      text { font-family: "Avenir Next", "Montserrat", "Segoe UI", sans-serif; }
+      @keyframes show {
+        0%, 13.5% { opacity: 1; transform: translateY(0); }
+        16%, 100% { opacity: 0; transform: translateY(-14px); }
+      }
+      @keyframes progress {
+        0% { transform: scaleX(.12); }
+        100% { transform: scaleX(1); }
+      }
+    </style>
+  </defs>
+
+  <rect width="430" height="932" rx="0" fill="url(#bg)"/>
+  <rect width="430" height="932" fill="url(#glowA)"/>
+  <rect width="430" height="932" fill="url(#glowB)"/>
+
+  <g class="progress" opacity=".85">
+    <rect x="24" y="26" width="382" height="4" rx="2" fill="rgba(245,240,231,.18)"/>
+    <rect class="fill" x="24" y="26" width="382" height="4" rx="2" fill="#f5f0e7"/>
+  </g>
+
+  <g class="slide s1">
+    <text x="44" y="305" class="gold" font-size="12" font-weight="800" letter-spacing="5">ЙОГА-СТУДИЯ · 2026</text>
+    <text x="44" y="382" class="cream" font-size="68" font-weight="900" letter-spacing="-3">ТВОЙ</text>
+    <text x="44" y="452" class="gold" font-size="68" font-style="italic" font-weight="300" letter-spacing="-3">ГОД</text>
+    <text x="44" y="522" class="cream" font-size="68" font-weight="900" letter-spacing="-3">В СТУДИИ</text>
+  </g>
+
+  <g class="slide s2" text-anchor="middle">
+    <text x="215" y="378" class="gold" font-size="12" font-weight="800" letter-spacing="5">В ЭТОМ ГОДУ ТЫ ПРОВЕЛ(А)</text>
+    <text x="215" y="500" class="cream" font-size="132" font-weight="900" letter-spacing="-8">101</text>
+    <text x="215" y="555" class="gold" font-size="30" font-weight="300" letter-spacing="8">ЧАС НА КОВРИКЕ</text>
+    <text x="215" y="624" class="muted" font-size="15">Это 4 дня · 5 ч · 5 мин непрерывной практики</text>
+  </g>
+
+  <g class="slide s3">
+    <text x="44" y="210" class="gold" font-size="14" font-weight="800" letter-spacing="6">ТВОЙ РИТМ</text>
+    <rect x="44" y="242" width="54" height="2" fill="#d1ad68"/>
+    <g transform="translate(48 350)">
+      <rect x="0" y="144" width="30" height="86" rx="5" fill="#5f8f88"/>
+      <rect x="48" y="118" width="30" height="112" rx="5" fill="#5f8f88"/>
+      <rect x="96" y="58" width="30" height="172" rx="5" fill="#d1ad68"/>
+      <rect x="144" y="82" width="30" height="148" rx="5" fill="#5f8f88"/>
+      <rect x="192" y="96" width="30" height="134" rx="5" fill="#5f8f88"/>
+      <rect x="240" y="38" width="30" height="192" rx="5" fill="#d1ad68"/>
+      <rect x="288" y="112" width="30" height="118" rx="5" fill="#5f8f88"/>
+    </g>
+    <rect x="44" y="654" width="342" height="92" rx="14" fill="rgba(209,173,104,.08)" stroke="rgba(209,173,104,.36)"/>
+    <text x="68" y="704" class="muted" font-size="16">Самый активный месяц в этом году:</text>
+    <text x="68" y="734" class="cream" font-size="22" font-weight="800">синтетический пример</text>
+  </g>
+
+  <g class="slide s4">
+    <text x="44" y="155" class="gold" font-size="14" font-weight="800" letter-spacing="6">ТВОИ ПРЕПОДАВАТЕЛИ</text>
+    <circle cx="106" cy="268" r="55" fill="rgba(245,240,231,.80)" stroke="rgba(209,173,104,.65)" stroke-width="3"/>
+    <text x="106" y="286" text-anchor="middle" fill="#102c2b" font-size="42" font-weight="900">1</text>
+    <text x="184" y="238" class="gold" font-size="13" font-weight="900" letter-spacing="4">#1 ПРЕПОДАВАТЕЛЬ</text>
+    <text x="184" y="294" class="cream" font-size="34" font-weight="900">ПРЕПОДАВАТЕЛЬ</text>
+    <text x="184" y="337" class="cream" font-size="34" font-style="italic" font-weight="300">1</text>
+    <text x="52" y="470" class="gold" font-size="72" font-weight="900">21</text>
+    <text x="168" y="438" class="muted" font-size="14" font-weight="800" letter-spacing="4">ЗАНЯТИЕ</text>
+    <rect x="206" y="458" width="166" height="42" rx="21" fill="#d1ad68"/>
+    <text x="289" y="485" text-anchor="middle" fill="#102c2b" font-size="13" font-weight="900" letter-spacing="2">30% ПРАКТИКИ</text>
+    <line x1="44" y1="560" x2="386" y2="560" class="line"/>
+    <text x="68" y="625" class="muted" font-size="18" font-weight="900">02</text>
+    <circle cx="126" cy="612" r="28" fill="rgba(245,240,231,.75)"/>
+    <text x="126" y="622" text-anchor="middle" fill="#102c2b" font-size="20" font-weight="900">2</text>
+    <text x="180" y="604" class="cream" font-size="24" font-weight="900">Преподаватель 2</text>
+    <text x="180" y="635" class="muted" font-size="16">14 занятий · 20%</text>
+    <line x1="44" y1="690" x2="386" y2="690" class="line"/>
+    <text x="68" y="755" class="muted" font-size="18" font-weight="900">03</text>
+    <circle cx="126" cy="742" r="28" fill="rgba(245,240,231,.75)"/>
+    <text x="126" y="752" text-anchor="middle" fill="#102c2b" font-size="20" font-weight="900">3</text>
+    <text x="180" y="734" class="cream" font-size="24" font-weight="900">Преподаватель 3</text>
+    <text x="180" y="765" class="muted" font-size="16">13 занятий · 19%</text>
+  </g>
+
+  <g class="slide s5">
+    <text x="52" y="175" class="gold" font-size="14" font-weight="800" letter-spacing="6">ТВОЯ ПРАКТИКА СОСТОИТ ИЗ</text>
+    <g transform="translate(72 255)" filter="url(#softShadow)">
+      <circle cx="143" cy="143" r="112" fill="none" stroke="#d1ad68" stroke-width="52" stroke-dasharray="302 704" transform="rotate(-90 143 143)"/>
+      <circle cx="143" cy="143" r="112" fill="none" stroke="#87bbb3" stroke-width="52" stroke-dasharray="176 830" stroke-dashoffset="-302" transform="rotate(-90 143 143)"/>
+      <circle cx="143" cy="143" r="112" fill="none" stroke="#adc8bf" stroke-width="52" stroke-dasharray="126 880" stroke-dashoffset="-478" transform="rotate(-90 143 143)"/>
+      <circle cx="143" cy="143" r="66" fill="rgba(16,44,43,.78)"/>
+      <text x="143" y="166" text-anchor="middle" class="cream" font-size="56" font-weight="900">84</text>
+    </g>
+    <rect x="54" y="678" width="14" height="14" rx="4" fill="#d1ad68"/>
+    <text x="88" y="692" class="cream" font-size="18" font-weight="900">ЙОГА. OPEN LEVEL</text>
+    <text x="338" y="692" text-anchor="end" class="gold" font-size="18" font-weight="900">43%</text>
+    <rect x="54" y="728" width="14" height="14" rx="4" fill="#87bbb3"/>
+    <text x="88" y="742" class="cream" font-size="18" font-weight="900">НАЧАЛЬНЫЙ УРОВЕНЬ</text>
+    <text x="338" y="742" text-anchor="end" class="gold" font-size="18" font-weight="900">25%</text>
+    <rect x="54" y="778" width="14" height="14" rx="4" fill="#adc8bf"/>
+    <text x="88" y="792" class="cream" font-size="18" font-weight="900">МЕДИТАЦИЯ</text>
+    <text x="338" y="792" text-anchor="end" class="gold" font-size="18" font-weight="900">18%</text>
+  </g>
+
+  <g class="slide s6" text-anchor="middle">
+    <text x="215" y="360" class="gold" font-size="13" font-weight="800" letter-spacing="6">ТВОЙ ИТОГ ГОДА</text>
+    <text x="215" y="470" class="cream" font-size="76" font-weight="900" letter-spacing="-4">YOGA</text>
+    <text x="215" y="548" class="gold" font-size="72" font-style="italic" font-weight="300" letter-spacing="-4">WRAPPED</text>
+    <text x="215" y="635" class="muted" font-size="17">Обезличенное демо для портфолио</text>
+  </g>
+
+  <text x="34" y="858" fill="rgba(245,240,231,.42)" font-size="11" letter-spacing="5">YOGA WRAPPED</text>
+  <text x="34" y="884" class="cream" font-size="14" font-weight="900" letter-spacing="5">ОБЕЗЛИЧЕННОЕ ДЕМО</text>
+</svg>
