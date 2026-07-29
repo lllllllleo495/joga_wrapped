@@ -1,58 +1,47 @@
-# Yoga Wrapped Telegram Mini App
+# Yoga Wrapped для Telegram Mini App
 
-Interactive year-in-review experience for a Telegram bot that turns a user's yoga attendance history into animated, mobile-first visual stories.
+Telegram-бот и мини-аппа, которые превращают историю посещений занятий в персональный интерактивный “итог года”: слайды, анимации, статистика практики и карточки, которые удобно сохранить для соцсетей.
 
-> Portfolio-safe demo: all names, studio references, attendance data, and instructor images are synthetic and anonymized.
+> Публичная версия для резюме: все имена, название студии, данные посещений и изображения преподавателей обезличены. В демо используются синтетические данные.
 
-## Live Demo
+## Демо
 
-Open the animated visualization:
+Открыть анимированную визуализацию:
 
-[View Yoga Wrapped Demo](https://lllllllleo495.github.io/joga_wrapped/)
+[Смотреть демо Yoga Wrapped](https://lllllllleo495.github.io/joga_wrapped/)
 
-The demo is designed as a Telegram Mini App style story: progress segments, tap navigation, swipe gestures, hold-to-pause, animated counters, and share-ready summary slides.
+Визуализация сделана в формате Telegram Mini App: прогресс слайдов, свайпы, тап по краям экрана, удержание пальцем для паузы, анимированные счетчики и адаптация под телефон.
 
-## What The Bot Does
+## Для чего этот бот
 
-The original product flow:
+Пользователь запускает анализ в Telegram, бот собирает историю занятий из личного кабинета, агрегирует статистику и открывает мини-аппу с персональными итогами года. После просмотра интерактивной истории пользователь может получить статичные карточки в чат, чтобы сохранить или опубликовать их без скриншотов.
 
-1. A user starts analysis in Telegram.
-2. The bot collects attendance history from a personal account.
-3. The backend aggregates practice statistics without exposing other users' data.
-4. The Mini App shows an animated personal Wrapped story.
-5. After the story, the user can receive static cards in chat for social sharing.
+## Что показывает Wrapped
 
-## Product Highlights
+- сколько занятий и часов практики было за год;
+- какие месяцы были самыми активными;
+- с какими преподавателями пользователь занимался чаще всего;
+- какие типы классов встречались чаще;
+- итоговую историю в формате мобильных слайдов.
 
-- Telegram bot flow with `/start` and `/analyze`.
-- Mobile-first Mini App visualization with story-like slides.
-- Isolated per-user reports: each user sees only their own aggregate stats.
-- Animated HTML/CSS/JS slides instead of static screenshots.
-- Share-oriented final cards after the animated experience.
-- Privacy-aware data model: demo uses synthetic data; production should avoid storing raw visit history longer than needed.
+## Что было важно в реализации
 
-## Demo Features
+- Изоляция данных: каждый пользователь видит только свои итоги.
+- Минимизация хранения: для повторного просмотра достаточно агрегированной статистики, без сырых CSV посещений.
+- Мобильный UX: слайды рассчитаны на Telegram WebView, свайпы, паузу удержанием и аккуратный progress bar.
+- Шеринг: после анимированной истории можно отправить карточки в чат.
+- Прод-деплой: VPS, nginx, systemd, webhook-режим Telegram-бота.
 
-- Animated slide progress with reliable back/forward state.
-- Hold-to-pause behavior for reading dense slides.
-- Responsive layout for phone and desktop.
-- Instructor leaderboard, monthly rhythm, time-of-day analysis, class mix, and final recap.
-- No real brand names, real instructor photos, phone numbers, tokens, or user data.
+## Технологии
 
-## Tech Stack
+- Python Telegram Bot
+- Playwright
+- SQLite
+- aiohttp
+- HTML, CSS, vanilla JavaScript
+- nginx, systemd, VPS
 
-- Python Telegram Bot for conversational flow.
-- Playwright for authenticated attendance collection.
-- SQLite for latest aggregate Wrapped state.
-- `aiohttp` web app for Telegram Mini App pages and secure callbacks.
-- HTML, CSS, and vanilla JavaScript for animated story slides.
-- Nginx + systemd deployment on VPS.
+## Приватность публичного демо
 
-## Why It Matters
-
-This project explores how a small Telegram bot can feel like a polished consumer product: personal, animated, privacy-aware, and easy to share. The work combines backend automation, data aggregation, deployment, and front-end storytelling in one end-to-end flow.
-
-## Repository Notes
-
-This public repository contains only a sanitized portfolio demo. Production secrets, real attendance exports, real instructor portraits, studio-specific copy, and deployment environment files are intentionally excluded.
+В этом репозитории нет реальных токенов, телефонов, CSV-файлов, ФИО, фотографий преподавателей, названия реальной студии и пользовательских данных. Демо показывает только интерфейс и механику продукта.
 
